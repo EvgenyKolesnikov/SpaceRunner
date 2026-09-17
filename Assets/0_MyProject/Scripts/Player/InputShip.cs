@@ -190,9 +190,9 @@ public class InputShip : MonoBehaviour
         Box_Collider.enabled = false;
         for (int i = 0; i < time; i++)
         {
-            ship_model.active = false;
+            ship_model.SetActive(false);
             yield return new WaitForSeconds(flick_time);
-            ship_model.active = true;
+            ship_model.SetActive(true);
             yield return new WaitForSeconds(flick_time);
         }
         Box_Collider.enabled = true;

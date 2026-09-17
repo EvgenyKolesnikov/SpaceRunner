@@ -9,8 +9,8 @@ public class Move : MonoBehaviour
     public List<GameObject> Tiles = new List<GameObject>();
     private float zPos = 0;
     private int starTiles = 2;
-    private int prevRand = 0;
-    private int num = 0;
+    private EntityId prevRand;
+    private EntityId num;
 
 
     void Start()
@@ -23,7 +23,7 @@ public class Move : MonoBehaviour
         {
             while (prevRand == num)
             {
-                num = Tiles[Random.Range(0, Tiles.Count)].GetInstanceID();
+                num = Tiles[Random.Range(0, Tiles.Count)].GetEntityId();
             }
             PoolManager.Instance.Reuse(num, new Vector3(0, 0, zPos), Quaternion.identity);
             prevRand = num;
@@ -37,7 +37,7 @@ public class Move : MonoBehaviour
         {
             while (prevRand == num)
             {
-                num = Tiles[Random.Range(0, Tiles.Count)].GetInstanceID();
+                num = Tiles[Random.Range(0, Tiles.Count)].GetEntityId();
             }
             PoolManager.Instance.Reuse(num, new Vector3(0, 0, zPos), Quaternion.identity);
             zPos += 50;

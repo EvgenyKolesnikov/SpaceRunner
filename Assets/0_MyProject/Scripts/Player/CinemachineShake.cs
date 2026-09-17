@@ -1,26 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Cinemachine;
+﻿using UnityEngine;
+using Unity.Cinemachine;
 
 public class CinemachineShake : MonoBehaviour
 {
     public static CinemachineShake Instance { get; private set; }
-    private CinemachineVirtualCamera cinemachineVirtualCamera;
+    private CinemachineBasicMultiChannelPerlin noise;
     private float shakeTimer;
     private float startingIntensity;
     private float shakeTimerTotal;
+
     private void Awake()
     {
         Instance = this;
-        cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+        var vcam = GetComponent<CinemachineVirtualCameraBase>();
+        if (vcam != null)
+            noise = vcam.GetCinemachineComponent(CinemachineCore.Stage.Noise) as CinemachineBasicMultiChannelPerlin;
+        if (noise == null)
+            noise = GetComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void ShakeCamera(float intensity, float time)
     {
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
+        if (noise == null)
+            return;
 
+        noise.AmplitudeGain = intensity;
         startingIntensity = intensity;
         shakeTimer = time;
         shakeTimerTotal = time;
@@ -31,8 +35,8 @@ public class CinemachineShake : MonoBehaviour
         if (shakeTimer > 0)
         {
             shakeTimer -= Time.deltaTime;
-                CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = Mathf.Lerp(startingIntensity, 0f, shakeTimer / shakeTimerTotal);
+            if (noise != null)
+                noise.AmplitudeGain = Mathf.Lerp(startingIntensity, 0f, shakeTimer / shakeTimerTotal);
         }
     }
 }

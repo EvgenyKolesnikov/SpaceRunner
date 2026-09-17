@@ -5,7 +5,7 @@ public class PoolManager : MonoBehaviour
 {
 
     public static PoolManager Instance { get; set; }
-    Dictionary<int, Queue<GameObject>> pool = new Dictionary<int, Queue<GameObject>>();
+    Dictionary<EntityId, Queue<GameObject>> pool = new Dictionary<EntityId, Queue<GameObject>>();
     Camera cam;
 
     public void Awake()
@@ -19,7 +19,7 @@ public class PoolManager : MonoBehaviour
 
     public void CreatePool(GameObject gameObj, int numberOfObj)
     {
-        int gameObjKey = gameObj.GetInstanceID();
+        EntityId gameObjKey = gameObj.GetEntityId();
         if (!pool.ContainsKey(gameObjKey))
         {
             pool.Add(gameObjKey, new Queue<GameObject>());
@@ -31,7 +31,7 @@ public class PoolManager : MonoBehaviour
             }
         }
     }
-    public void Reuse(int gameObjKey, Vector3 position, Quaternion orientation)
+    public void Reuse(EntityId gameObjKey, Vector3 position, Quaternion orientation)
     {
         GameObject go = pool[gameObjKey].Dequeue();
         go.SetActive(true);
@@ -39,7 +39,7 @@ public class PoolManager : MonoBehaviour
         go.transform.rotation = orientation;
         pool[gameObjKey].Enqueue(go);
     }
-    public void Reuse(int gameObjKey)
+    public void Reuse(EntityId gameObjKey)
     {
         GameObject go = pool[gameObjKey].Dequeue();
         go.SetActive(true);
